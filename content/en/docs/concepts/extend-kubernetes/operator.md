@@ -1,20 +1,17 @@
 ---
 title: Operator pattern
-content_template: templates/concept
+content_type: concept
 weight: 30
 ---
 
-{{% capture overview %}}
+<!-- overview -->
 
-Operators are software extensions to Kubernetes that make use of [custom
-resources](/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+Operators are software extensions to Kubernetes that make use of
+[custom resources](/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 to manage applications and their components. Operators follow
-Kubernetes principles, notably the [control loop](/docs/concepts/#kubernetes-control-plane).
+Kubernetes principles, notably the [control loop](/docs/concepts/architecture/controller).
 
-{{% /capture %}}
-
-
-{{% capture body %}}
+<!-- body -->
 
 ## Motivation
 
@@ -38,7 +35,7 @@ Kubernetes' {{< glossary_tooltip text="controllers" term_id="controller" >}}
 concept lets you extend the cluster's behaviour without modifying the code
 of Kubernetes itself.
 Operators are clients of the Kubernetes API that act as controllers for
-a [Custom Resource](/docs/concepts/api-extension/custom-resources/).
+a [Custom Resource](/docs/concepts/extend-kubernetes/api-extension/custom-resources/).
 
 ## An example Operator {#example}
 
@@ -106,27 +103,30 @@ as well as keeping the existing service in good shape.
 ## Writing your own Operator {#writing-operator}
 
 If there isn't an Operator in the ecosystem that implements the behavior you
-want, you can code your own. In [What's next](#what-s-next) you'll find a few
-links to libraries and tools you can use to write your own cloud native
-Operator.
+want, you can code your own. 
 
 You also implement an Operator (that is, a Controller) using any language / runtime
 that can act as a [client for the Kubernetes API](/docs/reference/using-api/client-libraries/).
 
-{{% /capture %}}
+Following are a few libraries and tools you can use to write your own cloud native
+Operator.
 
-{{% capture whatsnext %}}
+{{% thirdparty-content %}}
+
+* [Charmed Operator Framework](https://juju.is/)
+* [kubebuilder](https://book.kubebuilder.io/)
+* [KUDO](https://kudo.dev/) (Kubernetes Universal Declarative Operator)
+* [Metacontroller](https://metacontroller.app/) along with WebHooks that
+  you implement yourself
+* [Operator Framework](https://operatorframework.io)
+* [shell-operator](https://github.com/flant/shell-operator)
+
+## {{% heading "whatsnext" %}}
+
 
 * Learn more about [Custom Resources](/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 * Find ready-made operators on [OperatorHub.io](https://operatorhub.io/) to suit your use case
-* Use existing tools to write your own operator, eg:
-  * using [KUDO](https://kudo.dev/) (Kubernetes Universal Declarative Operator)
-  * using [kubebuilder](https://book.kubebuilder.io/)
-  * using [Metacontroller](https://metacontroller.app/) along with WebHooks that
-    you implement yourself
-  * using the [Operator Framework](https://github.com/operator-framework/getting-started)
 * [Publish](https://operatorhub.io/) your operator for other people to use
-* Read [CoreOS' original article](https://coreos.com/blog/introducing-operators.html) that introduced the Operator pattern
+* Read [CoreOS' original article](https://web.archive.org/web/20170129131616/https://coreos.com/blog/introducing-operators.html) that introduced the Operator pattern (this is an archived version of the original article).
 * Read an [article](https://cloud.google.com/blog/products/containers-kubernetes/best-practices-for-building-kubernetes-operators-and-stateful-apps) from Google Cloud about best practices for building Operators
 
-{{% /capture %}}

@@ -1,23 +1,24 @@
 ---
 title: PodとReplicationControllerのデバッグ
-content_template: templates/task
+content_type: task
 ---
 
-{{% capture overview %}}
+<!-- overview -->
 
 このページでは、PodとReplicationControllerをデバッグする方法を説明します。
 
-{{% /capture %}}
 
-{{% capture prerequisites %}}
+
+## {{% heading "prerequisites" %}}
+
 
 {{< include "task-tutorial-prereqs.md" >}} {{< version-check >}}
 
-* [Pod](/docs/concepts/workloads/pods/pod/)と[Podのライフサイクル](/docs/concepts/workloads/pods/pod-lifecycle/)の基本を理解している必要があります。
+* [Pod](/ja/docs/concepts/workloads/pods/pod/)と[Podのライフサイクル](/ja/docs/concepts/workloads/pods/pod-lifecycle/)の基本を理解している必要があります。
 
-{{% /capture %}}
 
-{{% capture steps %}}
+
+<!-- steps -->
 
 ## Podのデバッグ
 
@@ -46,9 +47,9 @@ Podをスケジュールできない理由に関するスケジューラーか�
 クラスター内のCPUまたはメモリーの供給を使い果たした可能性があります。
 この場合、いくつかのことを試すことができます。
 
-* クラスターに[ノードを追加します](/docs/admin/cluster-management/#resizing-a-cluster)。
+* クラスターに[ノードを追加します](/docs/tasks/administer-cluster/cluster-management/#resizing-a-cluster)。
 
-* [不要なPodを終了](/docs/user-guide/pods/single-container/#deleting_a_pod)して、
+* [不要なPodを終了](/docs/concepts/workloads/pods/#pod-termination)して、
   `Pending`状態のPodのための空きリソースを作ります。
 
 * Podがノードよりも大きくないことを確認します。
@@ -85,35 +86,7 @@ Podが`Waiting`状態となる最も一般的な原因は、イメージをプ�
 
 ### Podがクラッシュする、あるいはUnhealthy状態
 
-最初に、現在のコンテナのログを確認して下さい。
-
-```shell
-kubectl logs ${POD_NAME} ${CONTAINER_NAME}
-```
-
-以前にコンテナがクラッシュした場合、次のコマンドで以前のコンテナのクラッシュログにアクセスできます。
-
-```shell
-kubectl logs --previous ${POD_NAME} ${CONTAINER_NAME}
-```
-
-別の方法として、`exec`を使用してそのコンテナ内でコマンドを実行できます。
-
-```shell
-kubectl exec ${POD_NAME} -c ${CONTAINER_NAME} -- ${CMD} ${ARG1} ${ARG2} ... ${ARGN}
-```
-
-{{< note >}}
-`-c ${CONTAINER_NAME}`はオプションです。単一のコンテナのみを含むPodの場合は省略できます。
-{{< /note >}}
-
-例えば、実行中のCassandra Podのログを確認するには、次のコマンドを実行します。
-
-```shell
-kubectl exec cassandra -- cat /var/log/cassandra/system.log
-```
-
-これらのアプローチがいずれも機能しない場合、Podが実行されているホストマシンを見つけて、そのホストにSSH接続することができます。
+Podがスケジュールされると、[動作中のPodをデバッグする](/docs/tasks/debug-application-cluster/debug-running-pod/)に説明されている方法がデバッグに使用可能です。
 
 ## ReplicationControllerのデバッグ
 
@@ -122,4 +95,4 @@ Podを作成できない場合は、[上述の手順](#Podのデバッグ)を参
 
 `kubectl describe rc ${CONTROLLER_NAME}`を使用して、レプリケーションコントローラーに関連するイベントを調べることもできます。
 
-{{% /capture %}}
+

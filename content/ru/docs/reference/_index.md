@@ -5,21 +5,22 @@ approvers:
 linkTitle: "Ссылки"
 main_menu: true
 weight: 70
-content_template: templates/concept
+content_type: concept
 ---
 
-{{% capture overview %}}
+<!-- overview -->
 
 Этот раздел документации Kubernetes содержит ссылки.
 
-{{% /capture %}}
 
-{{% capture body %}}
+
+<!-- body -->
 
 ## Ссылки API
 
 * [Обзор Kubernetes API](/docs/reference/using-api/api-overview/) - Обзор API для Kubernetes.
 * Версии Kubernetes API
+  * [1.17](/docs/reference/generated/kubernetes-api/v1.17/)
   * [1.16](/docs/reference/generated/kubernetes-api/v1.16/)
   * [1.15](/docs/reference/generated/kubernetes-api/v1.15/)
   * [1.14](/docs/reference/generated/kubernetes-api/v1.14/)
@@ -40,8 +41,8 @@ content_template: templates/concept
 
 * [kubectl](/docs/user-guide/kubectl-overview) - Основной инструмент CLI для запуска команд и управления кластерами Kubernetes.
     * [JSONPath](/docs/user-guide/jsonpath/) - Документация по синтаксису использования [выражений JSONPath](http://goessner.net/articles/JsonPath/) с kubectl.
-* [kubeadm](/docs/admin/kubeadm/) - Инструмент CLI для простого обеспечения безопасного кластера Kubernetes.
-* [kubefed](/docs/admin/kubefed/) - Инструмент CLI, чтобы помочь вам администрировать ваши федеративные кластеры.
+* [kubeadm](/docs/admin/kubeadm/) - Инструмент CLI для легкого разворачивания защищенного кластера Kubernetes.
+* [kubefed](/docs/admin/kubefed/) - Инструмент CLI для помощи в администрировании федеративных кластеров.
 
 ## Ссылки на конфигурации
 
@@ -57,4 +58,4 @@ content_template: templates/concept
 
 Архив документации по дизайну для функциональности Kubernetes. Начните с [Архитектура Kubernetes](https://git.k8s.io/community/contributors/design-proposals/architecture/architecture.md) и [Обзор дизайна Kubernetes](https://git.k8s.io/community/contributors/design-proposals).
 
-{{% /capture %}}
+

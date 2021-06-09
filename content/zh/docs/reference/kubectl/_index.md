@@ -1,5 +1,4 @@
 ---
-title: "kubectl CLI"
+title: "kubectl 命令行界面"
 weight: 60
 ---
-

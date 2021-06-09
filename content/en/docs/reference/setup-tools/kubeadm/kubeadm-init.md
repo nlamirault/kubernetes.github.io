@@ -3,18 +3,18 @@ reviewers:
 - luxas
 - jbeda
 title: kubeadm init
-content_template: templates/concept
+content_type: concept
 weight: 20
 ---
-{{% capture overview %}}
+<!-- overview -->
 This command initializes a Kubernetes control-plane node.
-{{% /capture %}}
 
-{{% capture body %}}
+<!-- body -->
 
 {{< include "generated/kubeadm_init.md" >}}
 
 ### Init workflow {#init-workflow}
+
 `kubeadm init` bootstraps a Kubernetes control-plane node by executing the
 following steps:
 
@@ -23,11 +23,9 @@ following steps:
    considered errors and will exit kubeadm until the problem is corrected or the
    user specifies `--ignore-preflight-errors=<list-of-errors>`.
 
-1. Generates a self-signed CA (or using an existing one if provided) to set up
-   identities for each component in the cluster. If the user has provided their
+1. Generates a self-signed CA to set up identities for each component in the cluster. The user can provide their
    own CA cert and/or key by dropping it in the cert directory configured via `--cert-dir`
-   (`/etc/kubernetes/pki` by default) this step is skipped as described in the
-   [Using custom certificates](#custom-certificates) document.
+   (`/etc/kubernetes/pki` by default).
    The APIServer certs will have additional SAN entries for any `--apiserver-cert-extra-sans` arguments, lowercased if necessary.
 
 1. Writes kubeconfig files in `/etc/kubernetes/`  for
@@ -68,9 +66,11 @@ following steps:
 
 1. Installs a DNS server (CoreDNS) and the kube-proxy addon components via the API server.
    In Kubernetes version 1.11 and later CoreDNS is the default DNS server.
-   To install kube-dns instead of CoreDNS, the DNS addon has to be configured in the kubeadm `ClusterConfiguration`. For more information about the configuration see the section
-   `Using kubeadm init with a configuration file` below.
    Please note that although the DNS server is deployed, it will not be scheduled until CNI is installed.
+
+   {{< warning >}}
+   kube-dns usage with kubeadm is deprecated as of v1.18 and is removed in v1.21.
+   {{< /warning >}}
 
 ### Using init phases with kubeadm {#init-phases}
 
@@ -112,21 +112,23 @@ The config file is still considered beta and may change in future versions.
 
 It's possible to configure `kubeadm init` with a configuration file instead of command
 line flags, and some more advanced features may only be available as
-configuration file options. This file is passed with the `--config` option.
+configuration file options. This file is passed using the `--config` flag and it must
+contain a `ClusterConfiguration` structure and optionally more structures separated by `---\n`
+Mixing `--config` with others flags may not be allowed in some cases.
 
 The default configuration can be printed out using the
 [kubeadm config print](/docs/reference/setup-tools/kubeadm/kubeadm-config/) command.
 
-It is **recommended** that you migrate your old `v1beta1` configuration to `v1beta2` using
+If your configuration is not using the latest version it is **recommended** that you migrate using
 the [kubeadm config migrate](/docs/reference/setup-tools/kubeadm/kubeadm-config/) command.
 
-For more details on each field in the `v1beta2` configuration you can navigate to our
-[API reference pages](https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta2).
+For more information on the fields and usage of the configuration you can navigate to our API reference
+page and pick a version from [the list](https://pkg.go.dev/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm#section-directories).
 
 ### Adding kube-proxy parameters {#kube-proxy}
 
 For information about kube-proxy parameters in the kubeadm configuration see:
-- [kube-proxy](https://godoc.org/k8s.io/kubernetes/pkg/proxy/apis/config#KubeProxyConfiguration)
+- [kube-proxy reference](/docs/reference/config-api/kube-proxy-config.v1alpha1/)
 
 For information about enabling IPVS mode with kubeadm see:
 - [IPVS](https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md)
@@ -164,7 +166,7 @@ to download the certificates when additional control-plane nodes are joining, by
 
 The following phase command can be used to re-upload the certificates after expiration:
 
-```
+```shell
 kubeadm init phase upload-certs --upload-certs --certificate-key=SOME_VALUE --config=SOME_YAML_FILE
 ```
 
@@ -173,34 +175,16 @@ If the flag `--certificate-key` is not passed to `kubeadm init` and
 
 The following command can be used to generate a new key on demand:
 
+```shell
+kubeadm certs certificate-key
 ```
-kubeadm alpha certs certificate-key
-```
 
-### Using custom certificates {#custom-certificates}
+### Certificate management with kubeadm
 
-By default, kubeadm generates all the certificates needed for a cluster to run.
-You can override this behavior by providing your own certificates.
-
-To do so, you must place them in whatever directory is specified by the
-`--cert-dir` flag or `CertificatesDir` configuration file key. By default this
-is `/etc/kubernetes/pki`.
-
-If a given certificate and private key pair exists before running `kubeadm init`,
-kubeadm will not overwrite them. This means you can, for example, copy an existing
-CA into `/etc/kubernetes/pki/ca.crt` and `/etc/kubernetes/pki/ca.key`,
-and kubeadm will use this CA for signing the rest of the certificates.
-
-#### External CA mode {#external-ca-mode}
-
-It is also possible to provide just the `ca.crt` file and not the
-`ca.key` file (this is only available for the root CA file, not other cert pairs).
-If all other certificates and kubeconfig files are in place, kubeadm recognizes
-this condition and activates the "External CA" mode. kubeadm will proceed without the
-CA key on disk.
-
-Instead, run the controller-manager standalone with `--controllers=csrsigner` and
-point to the CA certificate and key.
+For detailed information on certificate management with kubeadm see
+[Certificate Management with kubeadm](/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/).
+The document includes information about using external CA, custom certificates
+and certificate renewal.
 
 ### Managing the kubeadm drop-in file for the kubelet {#kubelet-drop-in}
 
@@ -242,26 +226,26 @@ token distribution for easier automation. To implement this automation, you must
 know the IP address that the control-plane node will have after it is started,
 or use a DNS name or an address of a load balancer.
 
-1.  Generate a token. This token must have the form  `<6 character string>.<16
-    character string>`. More formally, it must match the regex:
-    `[a-z0-9]{6}\.[a-z0-9]{16}`.
+1. Generate a token. This token must have the form  `<6 character string>.<16
+   character string>`. More formally, it must match the regex:
+   `[a-z0-9]{6}\.[a-z0-9]{16}`.
 
-    kubeadm can generate a token for you:
+   kubeadm can generate a token for you:
 
-    ```shell
+   ```shell
     kubeadm token generate
-    ```
+   ```
 
-1.  Start both the control-plane node and the worker nodes concurrently with this token.
-    As they come up they should find each other and form the cluster.  The same
-    `--token` argument can be used on both `kubeadm init` and `kubeadm join`.
+1. Start both the control-plane node and the worker nodes concurrently with this token.
+   As they come up they should find each other and form the cluster.  The same
+   `--token` argument can be used on both `kubeadm init` and `kubeadm join`.
 
-1.  Similar can be done for `--certificate-key` when joining additional control-plane
-    nodes. The key can be generated using:
+1. Similar can be done for `--certificate-key` when joining additional control-plane
+   nodes. The key can be generated using:
 
-    ```shell
-    kubeadm alpha certs certificate-key
-    ```
+   ```shell
+   kubeadm certs certificate-key
+   ```
 
 Once the cluster is up, you can grab the admin credentials from the control-plane node
 at `/etc/kubernetes/admin.conf` and use that to talk to the cluster.
@@ -271,12 +255,10 @@ it does not allow the root CA hash to be validated with
 `--discovery-token-ca-cert-hash` (since it's not generated when the nodes are
 provisioned). For details, see the [kubeadm join](/docs/reference/setup-tools/kubeadm/kubeadm-join/).
 
-{{% /capture %}}
+## {{% heading "whatsnext" %}}
 
-{{% capture whatsnext %}}
 * [kubeadm init phase](/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/) to understand more about
 `kubeadm init` phases
 * [kubeadm join](/docs/reference/setup-tools/kubeadm/kubeadm-join/) to bootstrap a Kubernetes worker node and join it to the cluster
 * [kubeadm upgrade](/docs/reference/setup-tools/kubeadm/kubeadm-upgrade/) to upgrade a Kubernetes cluster to a newer version
 * [kubeadm reset](/docs/reference/setup-tools/kubeadm/kubeadm-reset/) to revert any changes made to this host by `kubeadm init` or `kubeadm join`
-{{% /capture %}}

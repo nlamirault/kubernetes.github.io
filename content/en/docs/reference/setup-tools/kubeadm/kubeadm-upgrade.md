@@ -3,15 +3,15 @@ reviewers:
 - luxas
 - jbeda
 title: kubeadm upgrade
-content_template: templates/concept
+content_type: concept
 weight: 40
 ---
-{{% capture overview %}}
+<!-- overview -->
 `kubeadm upgrade` is a user-friendly command that wraps complex upgrading logic
 behind one command, with support for both planning an upgrade and actually performing it.
-{{% /capture %}}
 
-{{% capture body %}}
+
+<!-- body -->
 
 ## kubeadm upgrade guidance
 
@@ -19,8 +19,6 @@ The steps for performing a upgrade using kubeadm are outlined in [this document]
 For older versions of kubeadm, please refer to older documentation sets of the Kubernetes website.
 
 You can use `kubeadm upgrade diff` to see the changes that would be applied to static pod manifests.
-
-To use kube-dns with upgrades in Kubernetes v1.13.0 and later please follow [this guide](/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-addon).
 
 In Kubernetes v1.15.0 and later, `kubeadm upgrade apply` and `kubeadm upgrade node` will also
 automatically renew the kubeadm managed certificates on this node, including those stored in kubeconfig files.
@@ -46,8 +44,7 @@ reports of unexpected results.
 ## kubeadm upgrade node {#cmd-upgrade-node}
 {{< include "generated/kubeadm_upgrade_node.md" >}}
 
-{{% /capture %}}
 
-{{% capture whatsnext %}}
+## {{% heading "whatsnext" %}}
+
 * [kubeadm config](/docs/reference/setup-tools/kubeadm/kubeadm-config/) if you initialized your cluster using kubeadm v1.7.x or lower, to configure your cluster for `kubeadm upgrade`
-{{% /capture %}}

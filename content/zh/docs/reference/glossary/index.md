@@ -5,7 +5,7 @@ noedit: true
 default_active_tag: fundamental
 weight: 5
 card:
-  name: 参考
+  name: reference
   weight: 10
   title: 词汇表
 ---
